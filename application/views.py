@@ -10,6 +10,7 @@ from .filters import DateRangeFilter
 class Activity(
     viewsets.GenericViewSet
 ):
+    serializer_class = serializers.Activity.Create
 
     @action(detail=False, methods=['post'])
     def visited_links(self, request):
@@ -23,7 +24,7 @@ class Activity(
 
     @action(detail=False, methods=['get'])
     def visited_domains(self, request):
-        queryset = models.Activity.objects.all()
+        queryset = models.Activity.objects.all().distinct()
         queryset = DateRangeFilter.filter_queryset(queryset, request)
         data = queryset.values_list('domain', flat=True)
         from rest_framework import status
